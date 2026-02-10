@@ -75,12 +75,28 @@ def get_article_data(url):
     except: pass
     return None
 
+# def run_crawler():
+#     if not os.path.exists(NEWS_DIR): os.makedirs(NEWS_DIR)
+    
+#     print("\n--- 🤖 ID 기반 증분 수집 크롤러 ---")
+#     code = input("종목 코드 6자리: ").strip()
+#     if not (len(code) == 6 and code.isdigit()): return
+
+#     today_str = datetime.now().strftime('%Y%m%d')
+#     file_path = os.path.join(NEWS_DIR, f"{code}_{today_str}.json")
+    
+#     existing_data = []
+#     existing_ids = set() # 이제 제목 대신 ID로 중복 체크
+
+# 크롤러가 일단 삼성전자만 크롤링하도록
 def run_crawler():
     if not os.path.exists(NEWS_DIR): os.makedirs(NEWS_DIR)
     
-    print("\n--- 🤖 ID 기반 증분 수집 크롤러 ---")
-    code = input("종목 코드 6자리: ").strip()
-    if not (len(code) == 6 and code.isdigit()): return
+    print("\n--- 🤖 ID 기반 증분 수집 크롤러 (자동 모드) ---")
+    
+    # 사용자 입력 대신 삼성전자 코드로 고정
+    code = "005930" 
+    print(f"📈 대상 종목: 삼성전자({code})")
 
     today_str = datetime.now().strftime('%Y%m%d')
     file_path = os.path.join(NEWS_DIR, f"{code}_{today_str}.json")
