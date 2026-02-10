@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# 보안 파일
+.env
+
+# 파이썬 가상환경 및 패키지 관리
+.venv/
+__pycache__/
+*.py[cod]
+
+# 로컬 데이터 (수집된 뉴스 데이터는 제외)
+news/
+
+# 운영체제 관련
+.DS_Store
+Thumbs.db
