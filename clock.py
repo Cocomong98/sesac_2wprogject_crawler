@@ -1,27 +1,30 @@
+import schedule
 import time
 import subprocess
 from datetime import datetime, timezone
 
-# --- 설정 구간 ---
-TARGET_HOUR_UTC = 9  # 실행하고 싶은 UTC 시간 (예: 09:00)
-TARGET_MINUTE_UTC = 0
-# ----------------
+def job():
+    # 현재 시간을 UTC 기준으로 출력 (기록용)
+    now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+    print(f"[{now_utc} UTC] 작업 시작 (15분 간격 실행 중...)")
+    
+    try:
+        # main.py 실행
+        subprocess.run(["uv", "run", "main.py"], shell=True, check=True)
+        print("--- 작업 완료 ---")
+    except Exception as e:
+        print(f"실행 중 오류 발생: {e}")
 
-print(f"UTC 스케줄러 시작 (설정 시간: {TARGET_HOUR_UTC:02d}:{TARGET_MINUTE_UTC:02d} UTC)")
+# 1. 프로그램을 켜자마자 '즉시' 첫 번째 작업을 시작합니다.
+job()
+
+# 2. 그 시점부터 '15분 간격'으로 예약합니다. 
+# (예: 1시 10분에 켰다면 1시 25분, 1시 40분... 순서로 실행)
+schedule.every(15).minutes.do(job)
+
+print("스케줄러가 활성화되었습니다. 15분마다 main.py를 실행합니다.")
+print("종료하려면 이 창에서 Ctrl+C를 누르세요.")
 
 while True:
-    now_utc = datetime.now(timezone.utc)
-    
-    # 설정한 시(Hour)와 분(Minute)이 일치하고, 초가 0초일 때 실행
-    if now_utc.hour == TARGET_HOUR_UTC and now_utc.minute == TARGET_MINUTE_UTC:
-        print(f"[{now_utc}] 작업 시작!")
-        
-        # uv를 이용해 같은 폴더의 main.py 실행
-        # shell=True를 쓰면 시스템 경로의 uv를 바로 잡습니다.
-        subprocess.run(["uv", "run", "main.py"], shell=True)
-        
-        # 한 번 실행 후 61초 동안 대기 (중복 실행 방지)
-        time.sleep(61)
-    
-    # 10초마다 현재 시간 체크 (CPU 사용률을 낮춤)
-    time.sleep(10)
+    schedule.run_pending()
+    time.sleep(1)
